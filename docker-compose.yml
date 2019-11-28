@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+
+  iris:
+    build:
+      context: .
+    image: iris_oauth2
+    hostname: iris
+    volumes: 
+    - "./:/tmp"
+    ports:
+    - "81:52773"
+    - "80:80"
+    - "443:443"

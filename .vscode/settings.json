@@ -1,0 +1,8 @@
+{
+    "objectscript.conn.active": true,
+    "objectscript.conn.https": true,
+    "objectscript.conn.password": "password",
+    "objectscript.conn.port": 443,
+    "objectscript.conn.username": "SuperUser",
+    "objectscript.conn.ns": "MYCLIENT"
+}

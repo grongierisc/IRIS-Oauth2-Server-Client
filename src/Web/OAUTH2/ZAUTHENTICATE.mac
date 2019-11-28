@@ -1,0 +1,51 @@
+#include %occErrors
+#include %occInclude
+
+ZAUTHENTICATE(ServiceName, Namespace, Username, Password, Credentials, Properties) PUBLIC
+{
+    set tRes=$SYSTEM.Status.OK()
+    try {        
+        set Properties("FullName")="OAuth account "_Username
+        //set Properties("Roles")=Credentials("scope")
+        set Properties("Username")=Username
+        //set Properties("Password")=Password
+        // temporary hack as currently we can't pass Credentials array from GetCredentials() method
+        set Properties("Password")="xxx"    // we don't really care about oauth2 account password
+        set Properties("Roles")=Password
+    } catch (ex) {
+        set tRes=$SYSTEM.Status.Error($$$AccessDenied)
+    }
+    quit tRes
+}
+
+GetCredentials(ServiceName,Namespace,Username,Password,Credentials) Public 
+{
+    s ts=$zts
+    set tRes=$SYSTEM.Status.Error($$$AccessDenied)        
+
+     try {
+         If ServiceName="%Service_CSP" {
+            set accessToken=##class(%SYS.OAuth2.AccessToken).GetAccessTokenFromRequest(.sc)
+            if $$$ISOK(sc) {
+                set sc=##class(%SYS.OAuth2.AccessToken).GetIntrospection("Client",accessToken,.jsonObject)
+                if $$$ISOK(sc) {
+                    // todo: watch out for potential collision between standard account and delegated (openid) one!
+                    set Username=jsonObject.username
+                    set Credentials("scope")=$p(jsonObject.scope,"openid profile ",2)
+                    set Credentials("namespace")=Namespace
+                    // temporary hack
+                    //set Password="xxx"
+                    set Password=$tr(Credentials("scope")," ",",")
+                    set tRes=$SYSTEM.Status.OK()
+                } else {
+                    set tRes=$SYSTEM.Status.Error($$$GetCredentialsFailed) 
+                }
+            }    
+        } else {
+            set tRes=$SYSTEM.Status.Error($$$AccessDenied)        
+        }
+     } catch (ex) {
+         set tRes=$SYSTEM.Status.Error($$$GetCredentialsFailed)
+    }
+    Quit tRes
+}
