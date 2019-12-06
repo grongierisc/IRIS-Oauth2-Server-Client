@@ -28,3 +28,26 @@ COPY httpd-csp.conf $_HTTPD_DIR/sites-available
 RUN a2ensite httpd-csp && update-rc.d apache2 enable
 
 USER irisowner
+
+RUN echo "password" > /tmp/password.txt && /usr/irissys/dev/Container/changePassword.sh /tmp/password.txt
+
+COPY . /tmp/src
+
+WORKDIR /tmp/src
+
+# Install 
+# $ISC_PACKAGE_INSTANCENAME name of the iris instance on docker, default IRIS, valued by InterSystems
+# First start the instance quietly in emergency mode with user sys and password sys
+RUN iris start $ISC_PACKAGE_INSTANCENAME quietly EmergencyId=sys,sys \
+    && sh install.sh $ISC_PACKAGE_INSTANCENAME sys MYCLIENT  \
+    && /bin/echo -e "sys\nsys\n" | iris stop $ISC_PACKAGE_INSTANCENAME quietly
+
+WORKDIR /home/irisowner/
+
+# housekeeping
+USER root
+RUN rm -f $ISC_PACKAGE_INSTALLDIR/mgr/messages.log $ISC_PACKAGE_INSTALLDIR/mgr/alerts.log $ISC_PACKAGE_INSTALLDIR/mgr/IRIS.WIJ $ISC_PACKAGE_INSTALLDIR/mgr/journal/* \
+    && rm /tmp/password.txt.done && rm -fR /tmp/src
+
+USER irisowner
+

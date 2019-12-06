@@ -6,6 +6,7 @@ services:
       context: .
     image: iris_oauth2
     hostname: iris
+    command: -b "sudo service apache2 start"
     volumes: 
     - "./:/tmp"
     ports:

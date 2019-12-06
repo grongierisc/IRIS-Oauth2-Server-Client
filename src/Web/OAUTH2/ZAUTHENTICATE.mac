@@ -1,3 +1,5 @@
+ROUTINE ZAUTHENTICATE
+
 #include %occErrors
 #include %occInclude
 
