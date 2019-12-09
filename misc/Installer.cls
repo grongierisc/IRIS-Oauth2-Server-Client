@@ -88,7 +88,7 @@ ClassMethod CreateOauth2Server() As %Status
 	Set sys.SigningAlgorithm = "RS256"
 	Set sys.EncryptionAlgorithm = "A128CBC-HS256"
 	Set sys.KeyAlgorithm = "RSA1_5"
-	Set sys.SSLConfiguration = ""
+	Set sys.SSLConfiguration = "SSL"
 	Set tSC = sys.Save()
 
 	zn currentNS
@@ -120,19 +120,34 @@ ClassMethod CreateServerDefinitionForClient()
 	zn "%SYS"
 
     Set tSC = $$$OK
+		/*
+		
+		Set sys.IssuerEndpoint = "https://localhost/oauth2"
+		Set sys.SSLConfiguration = "SSL"
+		Set sys.ServerCredentials = ""
+		Set sys.InitialAccessToken = ""
+		Set sys.IsDiscovery = 1
 
+		Set tSC=##class(OAuth2.ServerDefinition).GetServerMetadata("http://localhost/oauth2","",.metadata)
+
+		Set sys.Metadata = metadata
+
+		Set tSC = sys.%Save()
+		*/
+	
     Set sys = ##class(OAuth2.ServerDefinition).%New()
 	Set sys.IssuerEndpoint = "https://localhost/oauth2"
 	Set sys.InitialAccessToken = ""
-	Set sys.SSLConfiguration = ""
+	Set sys.SSLConfiguration = "SSL"
 	Set sys.Metadata."authorization_endpoint" = ""
 	Set sys.Metadata."token_endpoint" = ""
 	Set sys.Metadata."userinfo_endpoint" = ""
 	Set sys.Metadata."introspection_endpoint" = ""
 	Set sys.Metadata."revocation_endpoint" = ""
 	Set sys.ServerCredentials = ""
-	Set sys.IsDiscovery = 0
+	Set sys.IsDiscovery = 1
 	Do sys.%Save()
+	
 
 	zn currentNS
 
@@ -146,11 +161,15 @@ ClassMethod CreateClient()
 
     Set tSC = $$$OK
 
-    Set tClientServer = ##class(OAuth2.Server.Client).%New()
-	Set tClientServer.SupportedGrantTypes = "AIPCJ"
-	Set tClientServer.Name = "Client"
-	Set tClientServer.RedirectURL = "https://localhost/csp/sys/oauth2/OAuth2.Response.cls"
-	Set tClientServer."client_name" = "Client"
+	Set tClientServer = ##class(OAuth2.Server.Client).%New()
+	Set tClientServer.SupportedGrantTypes = "AIPC"
+	Set tClientServer.Name = "Client2"
+	Do tClientServer.RedirectURL.Insert("https://localhost/csp/sys/oauth2/OAuth2.Response.cls")
+	Set tClientServer.ClientType = "confidential"
+	Set tClientServer.Metadata."jwks_uri" = "https://localhost/csp/sys/oauth2/OAuth2.JWTServer.cls?client_name=Client"
+	Set tClientServer.Metadata."redirect_uris" = $lb("https://localhost/csp/sys/oauth2/OAuth2.Response.cls")
+	Set tClientServer.Metadata."registration_client_uri" = "https://localhost/oauth2/register?client_id="_tClientServer.ClientId
+	Do ##class(%OAuth2.JWKS).AddRSA(,.private,.public)
 	Do tClientServer.Save()
 
 
