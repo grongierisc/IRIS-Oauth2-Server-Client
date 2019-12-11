@@ -25,8 +25,6 @@ DirSrc=$DIR/src
 
 
 irissession $instanceName -U USER <<EOF 
-sys
-$2
 zn "USER"
 do \$system.OBJ.ImportDir("$ClassImportDir","Installer.cls","cubk",.errors,1)
 write "Compilation de l'installer done"

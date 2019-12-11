@@ -1,7 +1,7 @@
 Class Web.OAUTH2.Cache1N Extends %CSP.Page
 {
 
-Parameter OAUTH2CLIENTREDIRECTURI = "https://localhost/csp/healthshare/myclient/Web.OAUTH2.Cache2N.cls";
+Parameter OAUTH2CLIENTREDIRECTURI = "https://localhost/csp/myclient/Web.OAUTH2.Cache2N.cls";
 
 Parameter OAUTH2APPNAME = "Client";
 

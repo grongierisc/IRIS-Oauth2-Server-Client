@@ -65,10 +65,10 @@ ClassMethod CreateOauth2Server() As %Status
 	Set sys.ClientSecretInterval = 0
 	Do sys.SupportedScopes.Clear()
 
-	Do sys.SupportedScopes.SetAt(1, "openid")
-	Do sys.SupportedScopes.SetAt(2, "profile")
-	Do sys.SupportedScopes.SetAt(3, "scope1")
-	Do sys.SupportedScopes.SetAt(4, "scope2")
+	Do sys.SupportedScopes.SetAt("openid", "openid")
+	Do sys.SupportedScopes.SetAt("profile", "profile")
+	Do sys.SupportedScopes.SetAt("scope1", "scope1")
+	Do sys.SupportedScopes.SetAt("scope2", "scope2")
 
 	Set sys.Description = ""
 	Set sys.DefaultScope = ""
@@ -120,34 +120,19 @@ ClassMethod CreateServerDefinitionForClient()
 	zn "%SYS"
 
     Set tSC = $$$OK
-		/*
 		
-		Set sys.IssuerEndpoint = "https://localhost/oauth2"
-		Set sys.SSLConfiguration = "SSL"
-		Set sys.ServerCredentials = ""
-		Set sys.InitialAccessToken = ""
-		Set sys.IsDiscovery = 1
-
-		Set tSC=##class(OAuth2.ServerDefinition).GetServerMetadata("http://localhost/oauth2","",.metadata)
-
-		Set sys.Metadata = metadata
-
-		Set tSC = sys.%Save()
-		*/
-	
-    Set sys = ##class(OAuth2.ServerDefinition).%New()
+	Set sys = ##class(OAuth2.ServerDefinition).%New()
 	Set sys.IssuerEndpoint = "https://localhost/oauth2"
-	Set sys.InitialAccessToken = ""
 	Set sys.SSLConfiguration = "SSL"
-	Set sys.Metadata."authorization_endpoint" = ""
-	Set sys.Metadata."token_endpoint" = ""
-	Set sys.Metadata."userinfo_endpoint" = ""
-	Set sys.Metadata."introspection_endpoint" = ""
-	Set sys.Metadata."revocation_endpoint" = ""
-	Set sys.ServerCredentials = ""
 	Set sys.IsDiscovery = 1
-	Do sys.%Save()
+
+	zw ##class(OAuth2.ServerDefinition).GetServerMetadata("https://localhost/oauth2","SSL",.metadata)
 	
+
+	Set sys.Metadata = metadata
+
+	Set tSC = sys.%Save()
+		
 
 	zn currentNS
 
@@ -159,64 +144,23 @@ ClassMethod CreateClient()
 	set currentNS = $Namespace
 	zn "%SYS"
 
-    Set tSC = $$$OK
-
-	Set tClientServer = ##class(OAuth2.Server.Client).%New()
-	Set tClientServer.SupportedGrantTypes = "AIPC"
-	Set tClientServer.Name = "Client2"
-	Do tClientServer.RedirectURL.Insert("https://localhost/csp/sys/oauth2/OAuth2.Response.cls")
-	Set tClientServer.ClientType = "confidential"
-	Set tClientServer.Metadata."jwks_uri" = "https://localhost/csp/sys/oauth2/OAuth2.JWTServer.cls?client_name=Client"
-	Set tClientServer.Metadata."redirect_uris" = $lb("https://localhost/csp/sys/oauth2/OAuth2.Response.cls")
-	Set tClientServer.Metadata."registration_client_uri" = "https://localhost/oauth2/register?client_id="_tClientServer.ClientId
-	Do ##class(%OAuth2.JWKS).AddRSA(,.private,.public)
-	Do tClientServer.Save()
-
-
+	Set ServerDefinition = ##class(OAuth2.ServerDefinition).Open(1)
 	Set sys = ##class(OAuth2.Client).%New()
 	Set sys.ApplicationName = "Client"
-	
-	Set sys.ServerDefinition = 2
+	Set sys.ServerDefinition = ServerDefinition
 	Set sys.Enabled = 1
 	Set sys.ClientType = "confidential"
-	Set sys.Description = ""
 	Set sys.SSLConfiguration = "SSL"
 	Set sys.RedirectionEndpoint.UseSSL = 1
 	Set sys.RedirectionEndpoint.Host = "localhost"
-	Set sys.RedirectionEndpoint.Port = ""
-	Set sys.RedirectionEndpoint.Prefix = ""
-	Set sys.DefaultScope = ""
-	Set sys.Metadata."token_endpoint_auth_method" = "client_secret_basic"
-	Set sys.Metadata."grant_types" = $lb("authorization_code","implicit","password","client_credentials","refresh_token") //jwt_authorization
+	Set sys.AuthenticationType = "basic"
 	Set sys.Metadata."client_name" = "Client"
-	Set sys.Metadata."logo_uri" = ""
-	Set sys.Metadata."client_uri" = ""
-	Set sys.Metadata."policy_uri" = ""
-	Set sys.Metadata."tos_uri" = ""
-	Set sys.ClientId = tClientServer.ClientId
-	Set sys.ClientSecret = tClientServer.ClientSecret
-	Set sys.ClientCredentials = ""
-	Set sys.ClientPassword = ""
+	zw sys.RegisterClient()
 
-	Set sys.Metadata."jwks_uri" = "https://localhost/csp/sys/oauth2/OAuth2.JWTServer.cls?client_name=Client"
-	Set sys.Metadata."redirect_uris" = $lb("https://localhost/csp/sys/oauth2/OAuth2.Response.cls")
-	Set sys.Metadata."token_endpoint_auth_signing_alg" = ""
-	Set sys.Metadata."id_token_signed_response_alg" = ""
-	Set sys.Metadata."id_token_encrypted_response_enc" = ""
-	Set sys.Metadata."id_token_encrypted_response_alg" = ""
-	Set sys.Metadata."userinfo_signed_response_alg" = ""
-	Set sys.Metadata."userinfo_encrypted_response_enc" = ""
-	Set sys.Metadata."userinfo_encrypted_response_alg" = ""
-	Set sys.Metadata."access_token_signed_response_alg" = ""
-	Set sys.Metadata."access_token_encrypted_response_enc" = ""
-	Set sys.Metadata."access_token_encrypted_response_alg" = ""
-	Set sys.Metadata."request_object_signing_alg" = ""
-	Set sys.Metadata."request_object_encryption_enc" = ""
-	Set sys.Metadata."request_object_encryption_alg" = ""
+	Set tSC = sys.%Save()
 
-	Set sys.Metadata.contacts = ""
-	Set sys.Metadata."default_max_age" = ""
-
+    Set tSC = $$$OK
+	
 	zn currentNS
 
     Quit tSC

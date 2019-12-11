@@ -1,4 +1,4 @@
-FROM store/intersystems/irishealth:2019.3.0.308.0-community
+FROM store/intersystems/irishealth-community:2019.4.0.379.0
 LABEL maintainer="Guillaume Rongier <guillaume.rongier@intersystems.com>"
 
 # Varaibles
@@ -22,6 +22,9 @@ RUN mkdir $_HTTPD_DIR/ssl && openssl req -x509 -nodes -days 1 -newkey rsa:2048 -
 
 #Enable CSPGateway
 COPY ./cspgateway/ /opt/cspgateway/bin
+RUN cp /usr/irissys/csp/bin/CSPa24.so /opt/cspgateway/bin
+RUN cp /usr/irissys/csp/bin/CSPa24Sys.so /opt/cspgateway/bin
+RUN cp /usr/irissys/csp/bin/libz.so /opt/cspgateway/bin
 
 COPY httpd-csp.conf $_HTTPD_DIR/sites-available
 
@@ -37,10 +40,10 @@ WORKDIR /tmp/src
 
 # Install 
 # $ISC_PACKAGE_INSTANCENAME name of the iris instance on docker, default IRIS, valued by InterSystems
-# First start the instance quietly in emergency mode with user sys and password sys
-RUN iris start $ISC_PACKAGE_INSTANCENAME quietly EmergencyId=sys,sys \
+# First start the instance quietly
+RUN sudo service apache2 start && iris start $ISC_PACKAGE_INSTANCENAME quietly \
     && sh install.sh $ISC_PACKAGE_INSTANCENAME sys MYCLIENT  \
-    && /bin/echo -e "sys\nsys\n" | iris stop $ISC_PACKAGE_INSTANCENAME quietly
+    && iris stop $ISC_PACKAGE_INSTANCENAME quietly && sudo service apache2 stop
 
 WORKDIR /home/irisowner/
 
