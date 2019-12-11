@@ -1,16 +1,13 @@
-# Https-Proxy-IRIS-Docker with Apache
+# IRIS-Oauth2-Server-Client with Apache
 Sample of an Https proxy for Intersystems Iris
 
 ## Run
 ```
-docker-compose up -d
+docker-compose up --build
 ```
 
 ## How it works
-The dockerfile works in 3 steps :
-* Make a self-signed certificate
-* Load modules
-  * For proxy mode
-  * For SSL
-* Make config file for the proxy
+
+Got to https://localhost/csp/myclient/Web.OAUTH2.Cache1N.cls
+Login : SuperUser/password
 
