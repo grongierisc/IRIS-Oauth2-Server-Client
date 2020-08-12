@@ -44,6 +44,7 @@ do:(sc'=1) \$system.Process.Terminate(,1),h
 write "Compilation des sources done"
 
 zn "%SYS"
+do \$system.OBJ.ImportDir(source,"ZAUTHENTICATE.mac","cubk",.errors,1)
 w ##class(Security.Applications).Import("$ClassImportDir"_"/Applications.xml")
 w "Import of previously exported configurations via terminal done"
 
