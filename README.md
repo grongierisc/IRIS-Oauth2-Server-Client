@@ -1,5 +1,5 @@
 # IRIS-Oauth2-Server-Client with Apache
-Sample of an Https proxy for Intersystems Iris
+Sample of an Oauth2/OpenId Server and Client with IRIS
 
 ## Run
 ```
