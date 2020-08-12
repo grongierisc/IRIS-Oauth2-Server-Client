@@ -123,7 +123,7 @@ h4 { color:#2080E0 ;}
             ..#SSLCONFIG,
             ..#OAUTH2APPNAME)
         if $$$ISOK(sc) {
-           // set sc=httpRequest.Get(..#OAUTH2ROOT_"/close/Web.OAUTH2.demoResourceWithTokenAuth.cls")
+           set sc=httpRequest.Get(..#OAUTH2ROOT_"/close/Web.OAUTH2.demoResourceWithTokenAuth.cls")
         }
         if $$$ISOK(sc) {
             set body=httpRequest.HttpResponse.Data
