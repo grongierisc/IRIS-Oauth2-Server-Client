@@ -16,7 +16,7 @@
     <IsNameSpaceDefault>false</IsNameSpaceDefault>
     <LockCSPName>true</LockCSPName>
     <MatchRoles>
-      <MatchRolesItem>:%DB_HSCUSTOM:%DB_HSLIB:%DB_HSSYS:%DB_USER</MatchRolesItem>
+      <MatchRolesItem>:%DB_HSCUSTOM:%DB_HSLIB:%DB_HSSYS:%DB_USER:%DB_MYCLIENT_DATA:%DB_MYCLIENT_SRC</MatchRolesItem>
     </MatchRoles>
     <Name>/api/close</Name>
     <NameSpace>MYCLIENT</NameSpace>
@@ -45,7 +45,7 @@
     <IsNameSpaceDefault>false</IsNameSpaceDefault>
     <LockCSPName>true</LockCSPName>
     <MatchRoles>
-      <MatchRolesItem>:%DB_HSCUSTOM:%DB_HSLIB:%DB_HSSYS:%DB_USER</MatchRolesItem>
+      <MatchRolesItem>:%DB_HSCUSTOM:%DB_HSLIB:%DB_HSSYS:%DB_USER:%DB_MYCLIENT_DATA:%DB_MYCLIENT_SRC</MatchRolesItem>
     </MatchRoles>
     <Name>/api/open</Name>
     <NameSpace>MYCLIENT</NameSpace>
@@ -74,7 +74,7 @@
     <IsNameSpaceDefault>true</IsNameSpaceDefault>
     <LockCSPName>true</LockCSPName>
     <MatchRoles>
-      <MatchRolesItem>:%DB_HSCUSTOM:%DB_HSLIB:%DB_HSSYS:%DB_USER</MatchRolesItem>
+      <MatchRolesItem>:%DB_HSCUSTOM:%DB_HSLIB:%DB_HSSYS:%DB_USER:%DB_MYCLIENT_DATA:%DB_MYCLIENT_SRC</MatchRolesItem>
     </MatchRoles>
     <Name>/csp/healthshare/myclient</Name>
     <NameSpace>MYCLIENT</NameSpace>
