@@ -1,8 +1,12 @@
 {
-    "objectscript.conn.active": true,
-    "objectscript.conn.https": true,
-    "objectscript.conn.password": "password",
-    "objectscript.conn.port": 443,
-    "objectscript.conn.username": "SuperUser",
-    "objectscript.conn.ns": "MYCLIENT"
+    "objectscript.conn" :{
+        "ns": "MYCLIENT",
+        "active": true,
+        "username":"_SYSTEM",
+        "password": "password",
+        "docker-compose": {
+          "service": "iris",
+          "internalPort": 52773
+        }
+}
 }
