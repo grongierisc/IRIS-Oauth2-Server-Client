@@ -7,8 +7,6 @@ services:
     image: iris_oauth2
     hostname: iris
     command: -b "sudo service apache2 start"
-    volumes: 
-    - "./:/tmp"
     ports:
     - "81:52773"
     - "80:80"
