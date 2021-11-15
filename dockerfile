@@ -1,4 +1,4 @@
-FROM store/intersystems/irishealth-community:2020.2.0.204.0
+FROM intersystemsdc/irishealth-community:2021.1.0.215.3-zpm
 LABEL maintainer="Guillaume Rongier <guillaume.rongier@intersystems.com>"
 
 # Varaibles
@@ -46,11 +46,6 @@ RUN sudo service apache2 start && iris start $ISC_PACKAGE_INSTANCENAME quietly \
     && iris stop $ISC_PACKAGE_INSTANCENAME quietly && sudo service apache2 stop
 
 WORKDIR /home/irisowner/
-
-# housekeeping
-USER root
-RUN rm -f $ISC_PACKAGE_INSTALLDIR/mgr/messages.log $ISC_PACKAGE_INSTALLDIR/mgr/alerts.log $ISC_PACKAGE_INSTALLDIR/mgr/IRIS.WIJ $ISC_PACKAGE_INSTALLDIR/mgr/journal/* \
-    && rm /tmp/password.txt.done && rm -fR /tmp/src
 
 USER irisowner
 

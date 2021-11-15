@@ -28,7 +28,7 @@ irissession $instanceName -U USER <<EOF
 zn "USER"
 do \$system.OBJ.ImportDir("$ClassImportDir","Installer.cls","cubk",.errors,1)
 write "Compilation de l'installer done"
-Set pVars("NAMESPACE")="$NameSpace"
+Set pVars("NAMESPACE")="MYCLIENT"
 Do ##class(OAuth2.Installer).setup(.pVars)
 Do ##class(OAuth2.Installer).CreateSSLConfig()
 Do ##class(OAuth2.Installer).CreateOauth2Server()
